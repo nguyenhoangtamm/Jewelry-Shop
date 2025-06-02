@@ -12,7 +12,13 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Giỏ hàng')),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go('/home'), // Quay lại HomeScreen
+        ),
+        title: const Text('Giỏ hàng'),
+      ),
       body: Consumer<CartService>(
         builder: (context, cartService, child) {
           if (cartService.isEmpty) {

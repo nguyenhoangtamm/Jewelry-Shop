@@ -34,47 +34,54 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         }
 
         return Scaffold(
-          appBar: AppBar(
-            title: Text(product.name),
-            actions: [
-              Consumer<CartService>(
-                builder: (context, cartService, child) {
-                  return Stack(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.shopping_cart_outlined),
-                        onPressed: () => context.go('/cart'),
-                      ),
-                      if (cartService.itemCount > 0)
-                        Positioned(
-                          right: 8,
-                          top: 8,
-                          child: Container(
-                            padding: const EdgeInsets.all(2),
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            constraints: const BoxConstraints(
-                              minWidth: 16,
-                              minHeight: 16,
-                            ),
-                            child: Text(
-                              '${cartService.itemCount}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                    ],
-                  );
-                },
+appBar: AppBar(
+  leading: IconButton(
+    icon: const Icon(Icons.arrow_back),
+    onPressed: () {
+      context.go('/home'); // hoặc Navigator.pop(context) nếu bạn dùng push
+    },
+  ),
+  title: Text(product.name),
+  actions: [
+    Consumer<CartService>(
+      builder: (context, cartService, child) {
+        return Stack(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.shopping_cart_outlined),
+              onPressed: () => context.go('/cart'),
+            ),
+            if (cartService.itemCount > 0)
+              Positioned(
+                right: 8,
+                top: 8,
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  constraints: const BoxConstraints(
+                    minWidth: 16,
+                    minHeight: 16,
+                  ),
+                  child: Text(
+                    '${cartService.itemCount}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
-            ],
-          ),
+          ],
+        );
+      },
+    ),
+  ],
+),
+
           body: Column(
             children: [
               Expanded(

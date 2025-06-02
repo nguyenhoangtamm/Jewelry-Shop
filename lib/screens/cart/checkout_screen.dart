@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart'; // Đảm bảo đã import go_router
 
+import '../../services/cart_service.dart';
 import '../../utils/app_theme.dart';
 
 class CheckoutScreen extends StatefulWidget {
@@ -16,36 +19,39 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final _addressController = TextEditingController();
 
   bool isProcessing = false;
-  double totalAmount = 500000; // Tổng tiền ví dụ
+
+  double get totalAmount {
+    final cartService = context.read<CartService>();
+    return cartService.total;
+  }
 
   void handlePayment() async {
     if (_formKey.currentState?.validate() != true) return;
 
     setState(() => isProcessing = true);
-
-    await Future.delayed(const Duration(seconds: 2)); // Giả lập thanh toán
-
+    await Future.delayed(const Duration(seconds: 2));
     setState(() => isProcessing = false);
 
     showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Thanh toán thành công'),
-        content: Text(
-          'Cảm ơn bạn, ${_nameController.text}, đã mua hàng!\n'
-          'Đơn hàng sẽ được giao tới: ${_addressController.text}.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pop(); // Quay lại trang trước nếu muốn
-            },
-            child: const Text('Đóng'),
-          ),
-        ],
+    context: context,
+    builder: (_) => AlertDialog(
+      title: const Text('Thanh toán thành công'),
+      content: Text(
+        'Cảm ơn bạn, ${_nameController.text}, đã mua hàng!\n'
+        'Đơn hàng sẽ được giao tới: ${_addressController.text}.',
       ),
-    );
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // Đóng dialog
+            context.go('/home'); // Chuyển về home_screen.dart
+          },
+          child: const Text('Đóng'),
+        ),
+      ],
+    ),
+  );
+
   }
 
   @override
@@ -59,7 +65,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Thanh toán')),
+      appBar: AppBar(
+        title: const Text('Thanh toán'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go('/cart'), // Quay lại giỏ hàng
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(

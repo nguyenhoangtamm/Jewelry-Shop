@@ -12,21 +12,25 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Hồ sơ'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-              // TODO: Navigate to edit profile
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Chức năng chỉnh sửa hồ sơ sẽ được cập nhật'),
-                ),
-              );
-            },
-          ),
-        ],
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () => context.go('/home'), // Điều hướng về trang Home
       ),
+      title: const Text('Hồ sơ'),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.edit),
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Chức năng chỉnh sửa hồ sơ sẽ được cập nhật'),
+              ),
+            );
+          },
+        ),
+      ],
+    ),
+
       body: Consumer<AuthService>(
         builder: (context, authService, child) {
           final user = authService.currentUser;
