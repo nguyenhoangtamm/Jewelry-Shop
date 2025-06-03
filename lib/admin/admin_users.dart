@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 
 import '../services/auth_service.dart';
 import '../utils/app_theme.dart';
@@ -10,7 +11,13 @@ class AdminUsers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Quản lý người dùng')),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go('/admin'), // Quay lại trang admin
+        ),
+        title: const Text('Quản lý người dùng'),
+      ),
       body: Consumer<AuthService>(
         builder: (context, authService, child) {
           final users = authService.getAllUsers();

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:go_router/go_router.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -77,7 +78,13 @@ class _AdminOrdersState extends State<AdminOrders> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Quản lý đơn hàng')),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go('/admin'), // Quay lại trang admin
+        ),
+        title: const Text('Quản lý đơn hàng'),
+      ),
       body: RefreshIndicator(
         onRefresh: fetchOrders,
         child: ListView(

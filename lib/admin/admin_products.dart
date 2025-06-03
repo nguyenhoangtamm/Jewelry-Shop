@@ -20,6 +20,10 @@ class _AdminProductsState extends State<AdminProducts> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+         leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go('/admin'), // Quay về trang /admin
+        ),
         title: const Text('Quản lý sản phẩm'),
         actions: [
           IconButton(
