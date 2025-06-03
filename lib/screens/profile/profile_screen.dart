@@ -89,11 +89,7 @@ class ProfileScreen extends StatelessWidget {
                         title: const Text('Đơn hàng của tôi'),
                         trailing: const Icon(Icons.arrow_forward_ios),
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Chức năng sẽ được cập nhật'),
-                            ),
-                          );
+                          context.go('/my_order');  // chuyển trang sang /my_order
                         },
                       ),
                       const Divider(height: 1),

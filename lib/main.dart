@@ -13,7 +13,9 @@ import 'screens/cart/checkout_screen.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/product/product_detail_screen.dart';
 import 'screens/profile/profile_screen.dart';
+import 'screens/myorder/my_order.dart';
 import 'screens/splash_screen.dart';
+import 'services/order_service.dart';
 import 'services/auth_service.dart';
 import 'services/cart_service.dart';
 import 'services/jewelry_service.dart';
@@ -115,6 +117,11 @@ class JewelryApp extends StatelessWidget {
         GoRoute(
           path: '/profile',
           builder: (context, state) => const ProfileScreen(),
+        ),
+         // Route cho MyOrderPage
+        GoRoute(
+          path: '/my_order',
+          builder: (context, state) => MyOrdersPage(orders: OrderService.getDemoOrders()),
         ),
         // Admin routes
         GoRoute(

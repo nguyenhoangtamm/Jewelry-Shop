@@ -65,7 +65,9 @@ class Order {
 
   bool get canCancel =>
       status == OrderStatus.pending || status == OrderStatus.confirmed;
+
   bool get isCompleted => status == OrderStatus.delivered;
+
   bool get isCancelled => status == OrderStatus.cancelled;
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -73,10 +75,9 @@ class Order {
       id: json['id'],
       userId: json['userId'],
       user: json['user'] != null ? User.fromJson(json['user']) : null,
-      items:
-          (json['items'] as List)
-              .map((item) => CartItem.fromJson(item))
-              .toList(),
+      items: (json['items'] as List)
+          .map((item) => CartItem.fromJson(item))
+          .toList(),
       subtotal: (json['subtotal'] as num).toDouble(),
       shippingFee: (json['shippingFee'] as num).toDouble(),
       discount: (json['discount'] as num).toDouble(),
