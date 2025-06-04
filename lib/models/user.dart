@@ -1,72 +1,110 @@
-class User {
-  final String id;
-  final String email;
-  final String name;
-  final String phone;
-  final String role; // 'user' or 'admin'
-  final String? avatar;
-  final DateTime createdAt;
-  final bool isActive;
+import 'base_model.dart';
 
+class User extends BaseModel {
+  String name;
+  int? gender; // 1 là nam, 2 là nữ
+  String email;
+  bool isAdmin;// 1 là true, 0 là false
+  String password;
+  String? phone;
+  DateTime? dateOfBirth;
+  String? address;
+  String? avatar;
+  bool isActive = true;// 1 là true, 0 là false
   User({
-    required this.id,
-    required this.email,
+    required super.id,
     required this.name,
-    required this.phone,
-    required this.role,
+    required this.email,
+    required this.password,
+    this.gender,
+    this.phone,
+    this.address,
+    this.dateOfBirth,
     this.avatar,
-    required this.createdAt,
+    this.isAdmin = false,
     this.isActive = true,
+    super.createdAt,
+    super.updatedAt,
+    super.isDeleted = false,
   });
+  @override
+  String get tableName => 'users';
 
-  bool get isAdmin => role == 'admin';
-  bool get isUser => role == 'user';
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      id: json['id'],
-      email: json['email'],
-      name: json['name'],
-      phone: json['phone'],
-      role: json['role'],
-      avatar: json['avatar'],
-      createdAt: DateTime.parse(json['createdAt']),
-      isActive: json['isActive'] ?? true,
-    );
-  }
-
+  @override
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'email': email,
       'name': name,
-      'phone': phone,
-      'role': role,
-      'avatar': avatar,
-      'createdAt': createdAt.toIso8601String(),
+      'gender':gender,
+      'email': email,
+      'password': password,
+      'isAdmin': isAdmin,
       'isActive': isActive,
+      'phone': phone,
+      'dateOfBirth': dateOfBirth?.toIso8601String(),
+      'address': address,
+      'avatar': avatar,
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
+      'isDeleted': isDeleted,
     };
   }
 
+  static User fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'].toString(),
+      name: json['name'],
+      email: json['email'],
+      password: json['password'],
+      phone: json['phone'],
+      address: json['address'],
+      gender: json['gender'],
+      isAdmin: (json['isAdmin'] == 1 || json['isAdmin'] == true),   // convert int->bool
+      isActive: (json['isActive'] == 1 || json['isActive'] == true),
+      dateOfBirth: json['dateOfBirth'] != null
+          ? DateTime.parse(json['dateOfBirth'])
+          : null,
+      avatar: json['avatar'],
+      isDeleted: (json['isDeleted'] == 1 || json['isDeleted'] == true),
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'])
+          : null,
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : null,
+    );
+  }
   User copyWith({
     String? id,
     String? email,
     String? name,
     String? phone,
-    String? role,
+    bool? isAdmin,
     String? avatar,
     DateTime? createdAt,
     bool? isActive,
+    DateTime? updatedAt,
+    bool? isDeleted,
+    String? password,
+    int? gender,
+    DateTime? dateOfBirth,
   }) {
     return User(
       id: id ?? this.id,
       email: email ?? this.email,
       name: name ?? this.name,
       phone: phone ?? this.phone,
-      role: role ?? this.role,
+      isAdmin: isAdmin ?? this.isAdmin,
       avatar: avatar ?? this.avatar,
-      createdAt: createdAt ?? this.createdAt,
       isActive: isActive ?? this.isActive,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isDeleted: isDeleted ?? this.isDeleted,
+      password: password ?? this.password,
+      gender: gender ?? this.gender,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      address: address ?? this.address,
     );
   }
+
 }

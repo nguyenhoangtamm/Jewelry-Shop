@@ -68,7 +68,7 @@ class ProfileScreen extends StatelessWidget {
                         const SizedBox(height: 16),
                         _buildInfoRow('Họ tên', user.name),
                         _buildInfoRow('Email', user.email),
-                        _buildInfoRow('Số điện thoại', user.phone),
+                        _buildInfoRow('Số điện thoại', user.phone??''),
                         _buildInfoRow(
                           'Vai trò',
                           user.isAdmin ? 'Quản trị viên' : 'Người dùng',
