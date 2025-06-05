@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jewelry_management_app/favorite/favorite_service.dart';
+import 'package:jewelry_management_app/screens/favorite/favorite_screen.dart';
+import 'package:jewelry_management_app/screens/profile/edit_profile_screen.dart';
+import 'package:jewelry_management_app/screens/shipping_address.dart';
 import 'package:provider/provider.dart';
 
 import 'admin/admin_dashboard.dart';
@@ -11,14 +15,14 @@ import 'screens/auth/register_screen.dart';
 import 'screens/cart/cart_screen.dart';
 import 'screens/cart/checkout_screen.dart';
 import 'screens/home/home_screen.dart';
+import 'screens/myorder/my_order.dart';
 import 'screens/product/product_detail_screen.dart';
 import 'screens/profile/profile_screen.dart';
-import 'screens/myorder/my_order.dart';
 import 'screens/splash_screen.dart';
-import 'services/order_service.dart';
 import 'services/auth_service.dart';
 import 'services/cart_service.dart';
 import 'services/jewelry_service.dart';
+import 'services/order_service.dart';
 import 'utils/app_theme.dart';
 
 void main() {
@@ -35,6 +39,8 @@ class JewelryApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => JewelryService()),
         ChangeNotifierProvider(create: (_) => CartService()),
+        ChangeNotifierProvider(
+            create: (_) => FavoriteService()), // <--- Thêm dòng này
       ],
       child: Consumer<AuthService>(
         builder: (context, authService, child) {
@@ -118,10 +124,15 @@ class JewelryApp extends StatelessWidget {
           path: '/profile',
           builder: (context, state) => const ProfileScreen(),
         ),
-         // Route cho MyOrderPage
+        GoRoute(
+          path: '/screens/profile/edit',
+          builder: (context, state) => const EditProfileScreen(),
+        ),
+        // Route cho MyOrderPage
         GoRoute(
           path: '/my_order',
-          builder: (context, state) => MyOrdersPage(orders: OrderService.getDemoOrders()),
+          builder: (context, state) =>
+              MyOrdersPage(orders: OrderService.getDemoOrders()),
         ),
         // Admin routes
         GoRoute(
@@ -131,6 +142,14 @@ class JewelryApp extends StatelessWidget {
         GoRoute(
           path: '/admin/products',
           builder: (context, state) => const AdminProducts(),
+        ),
+        GoRoute(
+          path: '/favorite',
+          builder: (context, state) => const FavoriteScreen(),
+        ),
+        GoRoute(
+          path: '/shipping_address',
+          builder: (context, state) => const ShippingAddressScreen(),
         ),
         GoRoute(
           path: '/admin/orders',
