@@ -12,25 +12,22 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () => context.go('/home'), // Điều hướng về trang Home
-      ),
-      title: const Text('Hồ sơ'),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.edit),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Chức năng chỉnh sửa hồ sơ sẽ được cập nhật'),
-              ),
-            );
+            context.go('/home'); // Đưa người dùng về màn hình Home
           },
         ),
-      ],
-    ),
-
+        title: const Text('Hồ sơ'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              context.push('/screens/profile/edit');
+            },
+          ),
+        ],
+      ),
       body: Consumer<AuthService>(
         builder: (context, authService, child) {
           final user = authService.currentUser;
@@ -45,16 +42,12 @@ class ProfileScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                // Profile avatar
                 const CircleAvatar(
                   radius: 50,
                   backgroundColor: AppTheme.primaryGold,
                   child: Icon(Icons.person, size: 50, color: Colors.white),
                 ),
-
                 const SizedBox(height: 16),
-
-                // User info
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16),
@@ -77,7 +70,6 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 16),
 
                 // Menu options
@@ -89,20 +81,17 @@ class ProfileScreen extends StatelessWidget {
                         title: const Text('Đơn hàng của tôi'),
                         trailing: const Icon(Icons.arrow_forward_ios),
                         onTap: () {
-                          context.go('/my_order');  // chuyển trang sang /my_order
+                          context
+                              .go('/my_order'); // chuyển trang sang /my_order
                         },
                       ),
                       const Divider(height: 1),
                       ListTile(
-                        leading: const Icon(Icons.favorite_outline),
+                        leading: const Icon(Icons.favorite_border),
                         title: const Text('Sản phẩm yêu thích'),
                         trailing: const Icon(Icons.arrow_forward_ios),
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Chức năng sẽ được cập nhật'),
-                            ),
-                          );
+                          context.push('/favorite');
                         },
                       ),
                       const Divider(height: 1),
@@ -111,11 +100,7 @@ class ProfileScreen extends StatelessWidget {
                         title: const Text('Địa chỉ giao hàng'),
                         trailing: const Icon(Icons.arrow_forward_ios),
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Chức năng sẽ được cập nhật'),
-                            ),
-                          );
+                          context.push('/shipping_address');
                         },
                       ),
                       const Divider(height: 1),
@@ -193,29 +178,27 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
-
   void _showLogoutDialog(BuildContext context, AuthService authService) {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Xác nhận đăng xuất'),
-            content: const Text('Bạn có chắc muốn đăng xuất?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Hủy'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  authService.logout();
-                },
-                style: TextButton.styleFrom(foregroundColor: Colors.red),
-                child: const Text('Đăng xuất'),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: const Text('Xác nhận đăng xuất'),
+        content: const Text('Bạn có chắc muốn đăng xuất?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Hủy'),
           ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              authService.logout();
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Đăng xuất'),
+          ),
+        ],
+      ),
     );
   }
 }

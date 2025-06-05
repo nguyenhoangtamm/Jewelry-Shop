@@ -136,6 +136,20 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  void updateUserProfile({required String name, required String phone}) {
+    if (_currentUser != null) {
+      _currentUser = _currentUser!.copyWith(name: name, phone: phone);
+
+      final index = _mockUsers.indexWhere((u) => u.id == _currentUser!.id);
+      if (index != -1) {
+        _mockUsers[index] = _currentUser!;
+      }
+
+      notifyListeners();
+    }
+  }
+
+  List<User> getAllUsers() => _mockUsers;
   Future<List<User>> getAllUsers() async {
     return await userDbHelper.getAll();
   }

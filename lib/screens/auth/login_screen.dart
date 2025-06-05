@@ -39,7 +39,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (mounted) {
       if (success) {
-        // Navigation is handled by GoRouter redirect
         if (authService.isAdmin) {
           context.go('/admin');
         } else {
@@ -74,7 +73,6 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: [
                 const SizedBox(height: 60),
-                // Logo and title
                 Container(
                   width: 100,
                   height: 100,
@@ -99,9 +97,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 Text(
                   'Đăng Nhập',
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: AppTheme.deepBlue,
-                    fontWeight: FontWeight.bold,
-                  ),
+                        color: AppTheme.deepBlue,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -111,7 +109,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ).textTheme.bodyLarge?.copyWith(color: AppTheme.silverGray),
                 ),
                 const SizedBox(height: 40),
-                // Login form
                 Card(
                   elevation: 8,
                   shape: RoundedRectangleBorder(
@@ -173,7 +170,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             alignment: Alignment.centerRight,
                             child: TextButton(
                               onPressed: () {
-                                // TODO: Implement forgot password
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text('Chức năng sẽ được cập nhật'),
@@ -203,33 +199,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                // Demo credentials info
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppTheme.lightGold.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: AppTheme.primaryGold.withOpacity(0.3),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      const Text(
-                        'Tài khoản demo:',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.deepBlue,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text('Admin: admin@jewelry.com / 123456'),
-                      const Text('User: user@jewelry.com / 123456'),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                // Register link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
