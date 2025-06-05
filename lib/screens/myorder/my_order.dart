@@ -45,7 +45,7 @@ class MyOrdersPage extends StatelessWidget {
                     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const SizedBox(height: 8),
-                  Text('Ngày đặt: ${dateFormatter.format(order.createdAt)}'),
+                  Text('Ngày đặt: ${order.createdAt != null ? dateFormatter.format(order.createdAt!) : "Không xác định"}'),
                   Text('Tổng tiền: ${currencyFormatter.format(order.total)}'),
                   const SizedBox(height: 8),
                   const Text('Sản phẩm:', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -176,7 +176,7 @@ class MyOrdersPage extends StatelessWidget {
                 Text('Chi tiết đơn hàng', style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(height: 16),
                 Text('Mã đơn hàng: ${order.id}'),
-                Text('Ngày đặt: ${DateFormat('dd/MM/yyyy').format(order.createdAt)}'),
+                Text('Ngày đặt: ${order.createdAt != null ? DateFormat('dd/MM/yyyy').format(order.createdAt!) : "Không xác định"}'),
                 Text('Trạng thái: ${order.statusText}'),
                 if (order.trackingNumber != null)
                   Text('Mã vận đơn: ${order.trackingNumber}'),

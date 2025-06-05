@@ -41,26 +41,22 @@ class JewelryCard extends StatelessWidget {
                     child: Container(
                       width: double.infinity,
                       decoration: BoxDecoration(color: Colors.grey[100]),
-                      child:
-                          jewelry.mainImage.startsWith('http')
-                              ? CachedNetworkImage(
-                                imageUrl: jewelry.mainImage,
-                                fit: BoxFit.cover,
-                                placeholder:
-                                    (context, url) => const Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                errorWidget:
-                                    (context, url, error) =>
-                                        _buildPlaceholderImage(),
-                              )
-                              : Image.asset(
-                                jewelry.mainImage,
-                                fit: BoxFit.cover,
-                                errorBuilder:
-                                    (context, error, stackTrace) =>
-                                        _buildPlaceholderImage(),
+                      child: jewelry.mainImage.startsWith('http')
+                          ? CachedNetworkImage(
+                              imageUrl: jewelry.mainImage,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator(),
                               ),
+                              errorWidget: (context, url, error) =>
+                                  _buildPlaceholderImage(),
+                            )
+                          : Image.asset(
+                              jewelry.mainImage,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  _buildPlaceholderImage(),
+                            ),
                     ),
                   ),
 
@@ -120,8 +116,8 @@ class JewelryCard extends StatelessWidget {
             // Product info
             Expanded(
               flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(12),
+              child: SizedBox(
+                height: 320, // hoặc giá trị phù hợp với giao diện của bạn
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -129,9 +125,9 @@ class JewelryCard extends StatelessWidget {
                     Text(
                       jewelry.name,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        height: 1.2,
-                      ),
+                            fontWeight: FontWeight.w600,
+                            height: 1.2,
+                          ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -142,8 +138,8 @@ class JewelryCard extends StatelessWidget {
                     Text(
                       jewelry.material,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppTheme.silverGray,
-                      ),
+                            color: AppTheme.silverGray,
+                          ),
                     ),
 
                     const SizedBox(height: 4),
@@ -157,8 +153,8 @@ class JewelryCard extends StatelessWidget {
                               index < jewelry.rating.floor()
                                   ? Icons.star
                                   : index < jewelry.rating
-                                  ? Icons.star_half
-                                  : Icons.star_border,
+                                      ? Icons.star_half
+                                      : Icons.star_border,
                               size: 12,
                               color: Colors.amber,
                             );
@@ -167,7 +163,9 @@ class JewelryCard extends StatelessWidget {
                         const SizedBox(width: 4),
                         Text(
                           '(${jewelry.reviewCount})',
-                          style: Theme.of(context).textTheme.bodySmall
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
                               ?.copyWith(color: AppTheme.silverGray),
                         ),
                       ],
@@ -189,23 +187,22 @@ class JewelryCard extends StatelessWidget {
                                   style: Theme.of(
                                     context,
                                   ).textTheme.bodySmall?.copyWith(
-                                    decoration: TextDecoration.lineThrough,
-                                    color: AppTheme.silverGray,
-                                  ),
+                                        decoration: TextDecoration.lineThrough,
+                                        color: AppTheme.silverGray,
+                                      ),
                                 ),
                               Text(
                                 jewelry.price.formatted,
                                 style: Theme.of(
                                   context,
                                 ).textTheme.titleSmall?.copyWith(
-                                  color: AppTheme.primaryGold,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                      color: AppTheme.primaryGold,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
                             ],
                           ),
                         ),
-
                         if (showAddToCart && jewelry.inStock)
                           Consumer<CartService>(
                             builder: (context, cartService, child) {
@@ -237,12 +234,11 @@ class JewelryCard extends StatelessWidget {
                                 child: Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    color:
-                                        isInCart
-                                            ? AppTheme.primaryGold.withOpacity(
-                                              0.1,
-                                            )
-                                            : AppTheme.primaryGold,
+                                    color: isInCart
+                                        ? AppTheme.primaryGold.withOpacity(
+                                            0.1,
+                                          )
+                                        : AppTheme.primaryGold,
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Icon(
@@ -250,10 +246,9 @@ class JewelryCard extends StatelessWidget {
                                         ? Icons.check
                                         : Icons.add_shopping_cart,
                                     size: 16,
-                                    color:
-                                        isInCart
-                                            ? AppTheme.primaryGold
-                                            : Colors.white,
+                                    color: isInCart
+                                        ? AppTheme.primaryGold
+                                        : Colors.white,
                                   ),
                                 ),
                               );

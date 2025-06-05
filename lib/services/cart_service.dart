@@ -167,7 +167,6 @@ class CartService extends ChangeNotifier {
       final order = Order(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         userId: userId,
-        items: List.from(_items),
         subtotal: subtotal,
         shippingFee: shippingFee,
         discount: discount,

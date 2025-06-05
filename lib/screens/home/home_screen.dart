@@ -45,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -276,8 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }
 
-                  final products = jewelryService.jewelry;
-
+                  final products = jewelryService.allJewelry;
                   if (products.isEmpty) {
                     return Center(
                       child: Padding(

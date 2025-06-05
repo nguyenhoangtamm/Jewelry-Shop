@@ -1,4 +1,5 @@
-import 'cart_item.dart';
+import 'package:jewelry_management_app/models/base_model.dart';
+import 'package:jewelry_management_app/models/cart_item.dart';
 import 'user.dart';
 
 enum OrderStatus {
@@ -11,27 +12,24 @@ enum OrderStatus {
   refunded,
 }
 
-class Order {
-  final String id;
-  final String userId;
-  final User? user;
-  final List<CartItem> items;
-  final double subtotal;
-  final double shippingFee;
-  final double discount;
-  final double total;
-  final OrderStatus status;
-  final String shippingAddress;
-  final String? notes;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
-  final String? trackingNumber;
+class Order extends BaseModel {
+  String userId;
+  User? user;
+  List<CartItem> items = [];
+  double subtotal;
+  double shippingFee;
+  double discount;
+  double total;
+  OrderStatus status;
+  String shippingAddress;
+  String? notes;
+  String? trackingNumber;
 
   Order({
-    required this.id,
+    required super.id,
     required this.userId,
     this.user,
-    required this.items,
+    this.items = const [],
     required this.subtotal,
     required this.shippingFee,
     required this.discount,
@@ -39,10 +37,14 @@ class Order {
     required this.status,
     required this.shippingAddress,
     this.notes,
-    required this.createdAt,
-    this.updatedAt,
+    super.createdAt,
+    super.updatedAt,
     this.trackingNumber,
+    super.isDeleted = false,
   });
+
+  @override
+  String get tableName => 'orders';
 
   String get statusText {
     switch (status) {
@@ -72,12 +74,9 @@ class Order {
 
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
-      id: json['id'],
-      userId: json['userId'],
+      id: json['id'].toString(),
+      userId: json['userId'].toString(),
       user: json['user'] != null ? User.fromJson(json['user']) : null,
-      items: (json['items'] as List)
-          .map((item) => CartItem.fromJson(item))
-          .toList(),
       subtotal: (json['subtotal'] as num).toDouble(),
       shippingFee: (json['shippingFee'] as num).toDouble(),
       discount: (json['discount'] as num).toDouble(),
@@ -88,19 +87,23 @@ class Order {
       ),
       shippingAddress: json['shippingAddress'],
       notes: json['notes'],
-      createdAt: DateTime.parse(json['createdAt']),
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
       updatedAt:
           json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
       trackingNumber: json['trackingNumber'],
+      isDeleted: (json['isDeleted'] == 1 || json['isDeleted'] == true),
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'userId': userId,
       'user': user?.toJson(),
-      'items': items.map((item) => item.toJson()).toList(),
+      // Không lưu items ở đây nữa
       'subtotal': subtotal,
       'shippingFee': shippingFee,
       'discount': discount,
@@ -108,9 +111,10 @@ class Order {
       'status': status.toString().split('.').last,
       'shippingAddress': shippingAddress,
       'notes': notes,
-      'createdAt': createdAt.toIso8601String(),
+      'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
       'trackingNumber': trackingNumber,
+      'isDeleted': isDeleted,
     };
   }
 
@@ -118,7 +122,6 @@ class Order {
     String? id,
     String? userId,
     User? user,
-    List<CartItem>? items,
     double? subtotal,
     double? shippingFee,
     double? discount,
@@ -129,12 +132,12 @@ class Order {
     DateTime? createdAt,
     DateTime? updatedAt,
     String? trackingNumber,
+    bool? isDeleted,
   }) {
     return Order(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       user: user ?? this.user,
-      items: items ?? this.items,
       subtotal: subtotal ?? this.subtotal,
       shippingFee: shippingFee ?? this.shippingFee,
       discount: discount ?? this.discount,
@@ -145,6 +148,7 @@ class Order {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       trackingNumber: trackingNumber ?? this.trackingNumber,
+      isDeleted: isDeleted ?? this.isDeleted,
     );
   }
 }

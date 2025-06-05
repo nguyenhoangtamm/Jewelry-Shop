@@ -35,6 +35,7 @@ class JewelryApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => JewelryService()),
         ChangeNotifierProvider(create: (_) => CartService()),
+        ChangeNotifierProvider(create: (_) => OrderService()),
       ],
       child: Consumer<AuthService>(
         builder: (context, authService, child) {
@@ -118,10 +119,13 @@ class JewelryApp extends StatelessWidget {
           path: '/profile',
           builder: (context, state) => const ProfileScreen(),
         ),
-         // Route cho MyOrderPage
+        // Route cho MyOrderPage
         GoRoute(
           path: '/my_order',
-          builder: (context, state) => MyOrdersPage(orders: OrderService.getDemoOrders()),
+          builder: (context, state) {
+            final orderService = Provider.of<OrderService>(context);
+            return MyOrdersPage(orders: orderService.orders);
+          },
         ),
         // Admin routes
         GoRoute(
