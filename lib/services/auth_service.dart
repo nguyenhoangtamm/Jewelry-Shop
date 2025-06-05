@@ -12,7 +12,6 @@ class AuthService extends ChangeNotifier {
   bool get isAdmin => _currentUser?.isAdmin ?? false;
   bool get isLoading => _isLoading;
 
-  // Mock users for demonstration
   final List<User> _mockUsers = [
     User(
       id: '1',
@@ -43,7 +42,7 @@ class AuthService extends ChangeNotifier {
       if (userId != null) {
         _currentUser = _mockUsers.firstWhere(
           (user) => user.id == userId,
-          orElse: () => _mockUsers[1], // Default to normal user
+          orElse: () => _mockUsers[1],
         );
         notifyListeners();
       }
@@ -57,23 +56,18 @@ class AuthService extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // Simulate API call delay
       await Future.delayed(const Duration(seconds: 1));
 
-      // Mock authentication
       final user = _mockUsers.firstWhere(
         (u) => u.email == email,
         orElse: () => throw Exception('Invalid credentials'),
       );
 
-      // Simple password validation (in real app, this would be secure)
       if (password != '123456') {
         throw Exception('Invalid credentials');
       }
 
       _currentUser = user;
-
-      // Save to storage
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('user_id', user.id);
 
@@ -88,25 +82,18 @@ class AuthService extends ChangeNotifier {
   }
 
   Future<bool> register(
-    String email,
-    String password,
-    String name,
-    String phone,
-  ) async {
+      String email, String password, String name, String phone) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      // Simulate API call delay
       await Future.delayed(const Duration(seconds: 1));
 
-      // Check if email already exists
-      final existingUser = _mockUsers.where((u) => u.email == email);
-      if (existingUser.isNotEmpty) {
+      final exists = _mockUsers.any((u) => u.email == email);
+      if (exists) {
         throw Exception('Email already exists');
       }
 
-      // Create new user
       final newUser = User(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         email: email,
@@ -119,7 +106,6 @@ class AuthService extends ChangeNotifier {
       _mockUsers.add(newUser);
       _currentUser = newUser;
 
-      // Save to storage
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('user_id', newUser.id);
 
@@ -135,19 +121,13 @@ class AuthService extends ChangeNotifier {
 
   Future<void> logout() async {
     _currentUser = null;
-
-    // Clear storage
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('user_id');
-
     notifyListeners();
   }
 
-  Future<bool> updateProfile({
-    String? name,
-    String? phone,
-    String? avatar,
-  }) async {
+  Future<bool> updateProfile(
+      {String? name, String? phone, String? avatar}) async {
     if (_currentUser == null) return false;
 
     try {
@@ -157,7 +137,6 @@ class AuthService extends ChangeNotifier {
         avatar: avatar ?? _currentUser!.avatar,
       );
 
-      // Update in mock users list
       final index = _mockUsers.indexWhere((u) => u.id == _currentUser!.id);
       if (index != -1) {
         _mockUsers[index] = _currentUser!;
@@ -170,9 +149,20 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  List<User> getAllUsers() {
-    return _mockUsers;
+  void updateUserProfile({required String name, required String phone}) {
+    if (_currentUser != null) {
+      _currentUser = _currentUser!.copyWith(name: name, phone: phone);
+
+      final index = _mockUsers.indexWhere((u) => u.id == _currentUser!.id);
+      if (index != -1) {
+        _mockUsers[index] = _currentUser!;
+      }
+
+      notifyListeners();
+    }
   }
+
+  List<User> getAllUsers() => _mockUsers;
 
   Future<bool> updateUserStatus(String userId, bool isActive) async {
     try {
