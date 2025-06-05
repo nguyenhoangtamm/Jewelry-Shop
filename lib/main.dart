@@ -5,7 +5,6 @@ import 'package:jewelry_management_app/screens/favorite/favorite_screen.dart';
 import 'package:jewelry_management_app/screens/profile/edit_profile_screen.dart';
 import 'package:jewelry_management_app/screens/shipping_address.dart';
 import 'package:provider/provider.dart';
-
 import 'admin/admin_dashboard.dart';
 import 'admin/admin_orders.dart';
 import 'admin/admin_products.dart';
