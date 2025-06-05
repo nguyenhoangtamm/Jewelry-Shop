@@ -178,7 +178,6 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
-
   void _showLogoutDialog(BuildContext context, AuthService authService) {
     showDialog(
       context: context,
