@@ -1,54 +1,53 @@
 import 'dart:convert';
 
-import 'base_model.dart';
+import 'package:jewelry_management_app/models/base_model.dart';
 
 class Jewelry extends BaseModel {
-  String name;
-  String description;
-  double price;
-  double? originalPrice;
-  String category;
-  String material;
-  List<String> images;
-  int stock;
-  bool isAvailable;
-  double rating;
-  int reviewCount;
-  Map<String, dynamic>? specifications;
+  final String name;
+  final String description;
+  final double price;
+  final List<String> imageUrls;
+  final String category;
+  final double rating;
+  final int reviewCount;
+  final String material;
+  final String gemstone;
+  final String size;
+  final String color;
+  final String brand;
+  final bool isAvailable;
+  final int stockQuantity;
+  final double weight; // in grams
+  final String origin;
+  final bool isCertified;
+  final String? certificateNumber;
 
   Jewelry({
     required super.id,
     required this.name,
     required this.description,
     required this.price,
-    this.originalPrice,
+    required this.imageUrls,
     required this.category,
-    required this.material,
-    required this.images,
-    required this.stock,
-    this.isAvailable = true,
     this.rating = 0.0,
     this.reviewCount = 0,
-    this.specifications,
+    required this.material,
+    this.gemstone = '',
+    required this.size,
+    required this.color,
+    required this.brand,
+    this.isAvailable = true,
+    this.stockQuantity = 0,
+    this.weight = 0.0,
+    this.origin = '',
+    this.isCertified = false,
+    this.certificateNumber,
     super.createdAt,
     super.updatedAt,
     super.isDeleted = false,
   });
-
   @override
   String get tableName => 'jewelries';
-
-  bool get hasDiscount => originalPrice != null && originalPrice! > price;
-
-  double get discountPercentage {
-    if (!hasDiscount) return 0;
-    return ((originalPrice! - price) / originalPrice!) * 100;
-  }
-
-  bool get inStock => stock > 0 && isAvailable;
-
-  String get mainImage => images.isNotEmpty ? images.first : '';
-
   @override
   Map<String, dynamic> toJson() {
     return {
@@ -56,55 +55,59 @@ class Jewelry extends BaseModel {
       'name': name,
       'description': description,
       'price': price,
-      'originalPrice': originalPrice,
+      'imageUrls': imageUrls,
       'category': category,
-      'material': material,
-      'images': images,
-      'stock': stock,
-      'isAvailable': isAvailable,
       'rating': rating,
       'reviewCount': reviewCount,
-      'specifications': specifications,
+      'material': material,
+      'gemstone': gemstone,
+      'size': size,
+      'color': color,
+      'brand': brand,
+      'isAvailable': isAvailable ? 1 : 0, // convert bool to int
+      'stockQuantity': stockQuantity,
+      'weight': weight,
+      'origin': origin,
+      'isCertified': isCertified ? 1 : 0, // convert bool to int
+      'certificateNumber': certificateNumber,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
-      'isDeleted': isDeleted,
+      'isDeleted': isDeleted ? 1 : 0, // convert bool to int
     };
   }
 
   static Jewelry fromJson(Map<String, dynamic> json) {
     return Jewelry(
-      id: json['id'].toString(),
+      id: json['id'],
       name: json['name'],
       description: json['description'],
-      price: (json['price'] as num).toDouble(),
-      originalPrice: json['originalPrice'] != null
-          ? (json['originalPrice'] as num).toDouble()
-          : null,
+      price: json['price'].toDouble(),
+      imageUrls: json['imageUrls'] is String
+          ? List<String>.from(jsonDecode(json['imageUrls']))
+          : (json['imageUrls'] is List &&
+                  json['imageUrls'].isNotEmpty &&
+                  json['imageUrls'][0] is List
+              ? List<String>.from(json['imageUrls'][0])
+              : List<String>.from(json['imageUrls'])),
       category: json['category'],
-      material: json['material'],
-      images: json['images'] is String
-          ? List<String>.from(jsonDecode(json['images']))
-          : (json['images'] is List && json['images'].isNotEmpty && json['images'][0] is List
-          ? List<String>.from(json['images'][0])
-          : List<String>.from(json['images'])),
-
-      stock: json['stock'],
-      isAvailable: json['isAvailable'] == true || json['isAvailable'] == 1,
-      rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
+      rating: json['rating']?.toDouble() ?? 0.0,
       reviewCount: json['reviewCount'] ?? 0,
-      specifications: json['specifications'] != null
-          ? (json['specifications'] is String
-          ? jsonDecode(json['specifications']) as Map<String, dynamic>
-          : Map<String, dynamic>.from(json['specifications']))
-          : null,
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
-          : null,
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'])
-          : null,
-      isDeleted:
-      json['isDeleted'] == true || json['isDeleted'] == 1,
+      material: json['material'],
+      gemstone: json['gemstone'] ?? '',
+      size: json['size'],
+      color: json['color'],
+      brand: json['brand'],
+      isAvailable: json['isAvailable'] == 1, // convert int to bool
+      stockQuantity: json['stockQuantity'] ?? 0,
+      weight: json['weight']?.toDouble() ?? 0.0,
+      origin: json['origin'] ?? '',
+      isCertified: json['isCertified'] == 1, // convert int to bool
+      certificateNumber: json['certificateNumber'],
+      createdAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt:
+          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      isDeleted: json['isDeleted'] == 1, // convert int to bool
     );
   }
 
@@ -113,15 +116,21 @@ class Jewelry extends BaseModel {
     String? name,
     String? description,
     double? price,
-    double? originalPrice,
+    List<String>? imageUrls,
     String? category,
-    String? material,
-    List<String>? images,
-    int? stock,
-    bool? isAvailable,
     double? rating,
     int? reviewCount,
-    Map<String, dynamic>? specifications,
+    String? material,
+    String? gemstone,
+    String? size,
+    String? color,
+    String? brand,
+    bool? isAvailable,
+    int? stockQuantity,
+    double? weight,
+    String? origin,
+    bool? isCertified,
+    String? certificateNumber,
     DateTime? createdAt,
     DateTime? updatedAt,
     bool? isDeleted,
@@ -131,15 +140,21 @@ class Jewelry extends BaseModel {
       name: name ?? this.name,
       description: description ?? this.description,
       price: price ?? this.price,
-      originalPrice: originalPrice ?? this.originalPrice,
+      imageUrls: imageUrls ?? this.imageUrls,
       category: category ?? this.category,
-      material: material ?? this.material,
-      images: images ?? this.images,
-      stock: stock ?? this.stock,
-      isAvailable: isAvailable ?? this.isAvailable,
       rating: rating ?? this.rating,
       reviewCount: reviewCount ?? this.reviewCount,
-      specifications: specifications ?? this.specifications,
+      material: material ?? this.material,
+      gemstone: gemstone ?? this.gemstone,
+      size: size ?? this.size,
+      color: color ?? this.color,
+      brand: brand ?? this.brand,
+      isAvailable: isAvailable ?? this.isAvailable,
+      stockQuantity: stockQuantity ?? this.stockQuantity,
+      weight: weight ?? this.weight,
+      origin: origin ?? this.origin,
+      isCertified: isCertified ?? this.isCertified,
+      certificateNumber: certificateNumber ?? this.certificateNumber,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       isDeleted: isDeleted ?? this.isDeleted,

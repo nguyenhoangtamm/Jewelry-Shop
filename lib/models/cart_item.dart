@@ -1,24 +1,27 @@
-import 'base_model.dart';
+import 'package:jewelry_management_app/models/base_model.dart';
+
 import 'jewelry.dart';
 
 class CartItem extends BaseModel {
   final Jewelry jewelry;
-  final int quantity;
-  final DateTime addedAt;
+  int quantity;
+  final String? giftWrapOption;
+  final String? engraving;
+  final String? personalizedMessage;
 
   CartItem({
     required super.id,
     required this.jewelry,
-    required this.quantity,
-    required this.addedAt,
+    this.quantity = 1,
+    this.giftWrapOption,
+    this.engraving,
+    this.personalizedMessage,
     super.createdAt,
     super.updatedAt,
     super.isDeleted = false,
   });
-
   @override
   String get tableName => 'cart_items';
-
   double get totalPrice => jewelry.price * quantity;
 
   @override
@@ -27,26 +30,26 @@ class CartItem extends BaseModel {
       'id': id,
       'jewelry': jewelry.toJson(),
       'quantity': quantity,
-      'addedAt': addedAt.toIso8601String(),
+      'giftWrapOption': giftWrapOption,
+      'engraving': engraving,
+      'personalizedMessage': personalizedMessage,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
       'isDeleted': isDeleted,
     };
   }
 
-  static CartItem fromJson(Map<String, dynamic> json) {
+  factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
-      id: json['id'].toString(),
+      id: json['id'],
       jewelry: Jewelry.fromJson(json['jewelry']),
       quantity: json['quantity'],
-      addedAt: DateTime.parse(json['addedAt']),
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
-          : null,
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'])
-          : null,
-      isDeleted: (json['isDeleted'] == 1 || json['isDeleted'] == true),
+      giftWrapOption: json['giftWrapOption'],
+      engraving: json['engraving'],
+      personalizedMessage: json['personalizedMessage'],
+      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      isDeleted: json['isDeleted'] ?? false,
     );
   }
 
@@ -54,7 +57,9 @@ class CartItem extends BaseModel {
     String? id,
     Jewelry? jewelry,
     int? quantity,
-    DateTime? addedAt,
+    String? giftWrapOption,
+    String? engraving,
+    String? personalizedMessage,
     DateTime? createdAt,
     DateTime? updatedAt,
     bool? isDeleted,
@@ -63,7 +68,9 @@ class CartItem extends BaseModel {
       id: id ?? this.id,
       jewelry: jewelry ?? this.jewelry,
       quantity: quantity ?? this.quantity,
-      addedAt: addedAt ?? this.addedAt,
+      giftWrapOption: giftWrapOption ?? this.giftWrapOption,
+      engraving: engraving ?? this.engraving,
+      personalizedMessage: personalizedMessage ?? this.personalizedMessage,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       isDeleted: isDeleted ?? this.isDeleted,

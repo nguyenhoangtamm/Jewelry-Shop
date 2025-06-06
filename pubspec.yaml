@@ -35,6 +35,8 @@ dependencies:
   # Utils
   intl: ^0.18.1
   uuid: ^4.1.0
+  flutter_rating_bar: ^4.0.1
+  flutter_spinkit: ^5.2.0
 
 dev_dependencies:
   flutter_test:
@@ -46,14 +48,13 @@ flutter:
 
   assets:
     - assets/images/
-    - assets/images/jewelry/
-#    - assets/images/icons/
+    - assets/icons/ 
     - assets/db/app_database.db
 
 
   fonts:
-    - family: Roboto
-      fonts:
-        - asset: assets/fonts/Roboto-Regular.ttf
-        - asset: assets/fonts/Roboto-Bold.ttf
-          weight: 700
+  - family: Roboto
+    fonts:
+      - asset: fonts/Roboto-Regular.ttf
+      - asset: fonts/Roboto-Bold.ttf
+        weight: 700

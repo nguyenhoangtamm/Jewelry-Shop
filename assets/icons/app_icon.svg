@@ -1,0 +1,24 @@
+<svg width="192" height="192" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background circle -->
+    <circle cx="96" cy="96" r="88" fill="#EE4D2D" />
+
+    <!-- Restaurant icon -->
+    <g fill="white" transform="translate(96,96)">
+        <!-- Fork -->
+        <path
+            d="M-30,-40 L-30,-20 L-24,-20 L-24,-40 M-30,-40 L-30,-50 M-24,-40 L-24,-50 M-27,-40 L-27,-50"
+            stroke="white" stroke-width="2" fill="none" />
+
+        <!-- Knife -->
+        <path d="M-10,-50 L-10,-30 L-6,-30 L-6,-50 L-10,-50 M-10,-30 L-10,40 L-6,40 L-6,-30"
+            stroke="white" stroke-width="2" fill="white" />
+
+        <!-- Spoon -->
+        <path
+            d="M10,-50 C15,-50 20,-45 20,-40 C20,-35 15,-30 10,-30 C5,-30 0,-35 0,-40 C0,-45 5,-50 10,-50 M10,-30 L10,40 L14,40 L14,-30"
+            stroke="white" stroke-width="2" fill="white" />
+
+        <!-- Plate -->
+        <ellipse cx="0" cy="20" rx="45" ry="8" fill="none" stroke="white" stroke-width="3" />
+    </g>
+</svg>
