@@ -55,7 +55,7 @@ class Jewelry extends BaseModel {
       'name': name,
       'description': description,
       'price': price,
-      'imageUrls': imageUrls,
+      'imageUrls': jsonEncode(imageUrls),
       'category': category,
       'rating': rating,
       'reviewCount': reviewCount,

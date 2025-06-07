@@ -185,8 +185,12 @@ class JewelryCard extends StatelessWidget {
                 // Content
                 Expanded(
                   flex: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
+                  child: Container(
+                    height:
+                        120, // Chiều cao cố định cho phần nội dung, bạn có thể điều chỉnh
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2), // Padding left/right 8, top/bottom 2
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

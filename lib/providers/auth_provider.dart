@@ -123,7 +123,7 @@ class AuthProvider extends ChangeNotifier {
   }) async {
     _setLoading(true);
     _clearError();
-
+    
     try {
       // Simulate API delay
       await Future.delayed(const Duration(seconds: 1));

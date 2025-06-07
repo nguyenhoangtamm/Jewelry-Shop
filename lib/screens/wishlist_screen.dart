@@ -12,6 +12,7 @@ class WishlistScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wishlistProvider = Provider.of<WishlistProvider>(context);
+    wishlistProvider.initializeWishlist(context);
     final wishlist = wishlistProvider.wishlist;
 
     return Scaffold(
@@ -44,7 +45,7 @@ class WishlistScreen extends StatelessWidget {
                   trailing: IconButton(
                     icon: const Icon(Icons.delete_outline),
                     onPressed: () {
-                      wishlistProvider.toggleWishlist(item);
+                      wishlistProvider.removeWishlist(context, item);
                     },
                   ),
                   onTap: () {

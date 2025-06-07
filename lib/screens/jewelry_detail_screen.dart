@@ -58,7 +58,7 @@ class _JewelryDetailScreenState extends State<JewelryDetailScreen> {
               color: isFavorite ? Colors.red : null,
             ),
             onPressed: () {
-              wishlistProvider.toggleWishlist(widget.jewelry);
+              wishlistProvider.toggleWishlist(context, widget.jewelry);
             },
           ),
           IconButton(

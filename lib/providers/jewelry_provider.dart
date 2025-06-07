@@ -50,7 +50,9 @@ class JewelryProvider extends ChangeNotifier {
   }
 
   Future<void> _initializeData() async {
-    _jewelries = await jewelryDbHelper.getAll();
+    _jewelries = (await jewelryDbHelper.getAll())
+        .where((j) => j.isDeleted == false)
+        .toList();
     _filteredJewelries = List.from(_jewelries);
     notifyListeners();
   }
@@ -126,19 +128,28 @@ class JewelryProvider extends ChangeNotifier {
     final index = _jewelries.indexWhere((j) => j.id == jewelry.id);
     if (index != -1) {
       _jewelries[index] = jewelry;
+      jewelryDbHelper.update(jewelry); // Thêm dòng này
       _filterJewelries();
     }
   }
 
   void removeJewelry(String jewelryId) {
-    _jewelries.removeWhere((jewelry) => jewelry.id == jewelryId);
-    _filterJewelries();
+    final index = _jewelries.indexWhere((jewelry) => jewelry.id == jewelryId);
+    if (index != -1) {
+      final updatedJewelry = _jewelries[index].copyWith(isDeleted: true);
+      _jewelries[index] = updatedJewelry;
+      jewelryDbHelper.update(updatedJewelry);
+      _filterJewelries();
+    }
   }
 
   void updateStock(String jewelryId, int newStock) {
     final index = _jewelries.indexWhere((j) => j.id == jewelryId);
     if (index != -1) {
-      _jewelries[index] = _jewelries[index].copyWith(stockQuantity: newStock);
+      final updatedJewelry =
+          _jewelries[index].copyWith(stockQuantity: newStock);
+      _jewelries[index] = updatedJewelry;
+      jewelryDbHelper.update(updatedJewelry); // Thêm dòng này
       _filterJewelries();
     }
   }
