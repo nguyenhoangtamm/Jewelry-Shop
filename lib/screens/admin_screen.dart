@@ -23,6 +23,13 @@ class _AdminScreenState extends State<AdminScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+
+    // Gọi hàm load đơn hàng cho admin
+    Future.delayed(Duration.zero, () {
+      if (!mounted) return;
+      final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+      orderProvider.initializeOrders(context);
+    });
   }
 
   @override
@@ -94,7 +101,7 @@ class StatisticsTab extends StatelessWidget {
                   Expanded(
                     child: _buildStatCard(
                       'Tổng đơn hàng',
-                      orderProvider.totalOrdersCount.toString(),
+                      orderProvider.totalOrdersAdmin.toString(),
                       Icons.shopping_bag,
                       Colors.green,
                     ),
@@ -329,7 +336,7 @@ class OrderManagementTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<OrderProvider>(
       builder: (context, orderProvider, child) {
-        if (orderProvider.orders.isEmpty) {
+        if (orderProvider.allOrders.isEmpty) {
           return const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -352,9 +359,9 @@ class OrderManagementTab extends StatelessWidget {
 
         return ListView.builder(
           padding: const EdgeInsets.all(16),
-          itemCount: orderProvider.orders.length,
+          itemCount: orderProvider.allOrders.length,
           itemBuilder: (context, index) {
-            final order = orderProvider.orders[index];
+            final order = orderProvider.allOrders[index];
             return Card(
               margin: const EdgeInsets.only(bottom: 12),
               elevation: 2,
@@ -542,50 +549,85 @@ class OrderManagementTab extends StatelessWidget {
                               context,
                               'Xác nhận',
                               Icons.check,
-                              () => orderProvider.updateOrderStatus(
-                                order.id,
-                                OrderStatus.confirmed,
-                              ),
+                              () async {
+                                await orderProvider.updateOrderStatus(
+                                  order.id,
+                                  OrderStatus.confirmed,
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Đã cập nhật trạng thái đơn hàng!')),
+                                );
+                              },
                               Colors.blue,
                             ),
                             _buildStatusButton(
                               context,
                               'Đang xử lý',
                               Icons.hourglass_empty,
-                              () => orderProvider.updateOrderStatus(
-                                order.id,
-                                OrderStatus.processing,
-                              ),
+                              () async {
+                                await orderProvider.updateOrderStatus(
+                                  order.id,
+                                  OrderStatus.processing,
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Đã cập nhật trạng thái đơn hàng!')),
+                                );
+                              },
                               Colors.purple,
                             ),
                             _buildStatusButton(
                               context,
                               'Đã gửi hàng',
                               Icons.local_shipping,
-                              () => orderProvider.updateOrderStatus(
-                                order.id,
-                                OrderStatus.shipped,
-                              ),
+                              () async {
+                                await orderProvider.updateOrderStatus(
+                                  order.id,
+                                  OrderStatus.shipped,
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Đã cập nhật trạng thái đơn hàng!')),
+                                );
+                              },
                               Colors.indigo,
                             ),
                             _buildStatusButton(
                               context,
                               'Đã giao hàng',
                               Icons.done_all,
-                              () => orderProvider.updateOrderStatus(
-                                order.id,
-                                OrderStatus.delivered,
-                              ),
+                              () async {
+                                await orderProvider.updateOrderStatus(
+                                  order.id,
+                                  OrderStatus.delivered,
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Đã cập nhật trạng thái đơn hàng!')),
+                                );
+                              },
                               AppTheme.successColor,
                             ),
                             _buildStatusButton(
                               context,
                               'Hủy đơn',
                               Icons.cancel,
-                              () => orderProvider.updateOrderStatus(
-                                order.id,
-                                OrderStatus.cancelled,
-                              ),
+                              () async {
+                                await orderProvider.updateOrderStatus(
+                                  order.id,
+                                  OrderStatus.cancelled,
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Đã cập nhật trạng thái đơn hàng!')),
+                                );
+                              },
                               AppTheme.errorColor,
                             ),
                           ],

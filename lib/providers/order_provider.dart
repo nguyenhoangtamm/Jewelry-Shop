@@ -8,12 +8,14 @@ import '../models/cart_item.dart';
 import '../models/order.dart';
 
 class OrderProvider extends ChangeNotifier {
+  final List<Order> _allOrders = [];
+  List<Order> get allOrders => _allOrders;
   final List<Order> _orders = [];
   String? userId = '';
   List<Order> get orders => _orders;
   final jewelryDbHelper =
       GenericDbHelper<Jewelry>('jewelries', Jewelry.fromJson);
-  List<Order> get recentOrders => _orders.take(5).toList();
+  List<Order> get recentOrders => _allOrders.take(5).toList();
   final orderDbHelper = GenericDbHelper<Order>('orders', Order.fromJson);
   final orderDetailsDbHelper =
       GenericDbHelper<OrderDetail>('order_details', OrderDetail.fromJson);
@@ -28,13 +30,22 @@ class OrderProvider extends ChangeNotifier {
     }
 
     final ordersFromDb = await orderDbHelper.getAll();
+    final ordersAdmin =
+        ordersFromDb.where((order) => order.isDeleted == false).toList();
 
-    final filteredOrders =
-        ordersFromDb.where((order) => order.userId == userId).toList();
+    _allOrders.clear();
+    _allOrders.addAll(ordersAdmin);
+    // Lọc các đơn hàng theo userId
+
+    final filteredOrders = ordersFromDb
+        .where((order) => order.userId == userId && order.isDeleted == false)
+        .toList();
     final orderDetails = await orderDetailsDbHelper.getAll();
     for (var order in filteredOrders) {
-      final details =
-          orderDetails.where((detail) => detail.orderId == order.id).toList();
+      final details = orderDetails
+          .where((detail) =>
+              detail.orderId == order.id && detail.isDeleted == false)
+          .toList();
 
       // Lấy jewelry bất đồng bộ
       order.items = await Future.wait(details.map((detail) async {
@@ -116,9 +127,18 @@ class OrderProvider extends ChangeNotifier {
   }
 
   Future<void> updateOrderStatus(String orderId, OrderStatus newStatus) async {
-    final index = _orders.indexWhere((order) => order.id == orderId);
-    if (index >= 0) {
-      final currentOrder = _orders[index];
+    final indexOrders = _orders.indexWhere((order) => order.id == orderId);
+    final indexAllOrders =
+        _allOrders.indexWhere((order) => order.id == orderId);
+
+    Order? currentOrder;
+    if (indexOrders >= 0) {
+      currentOrder = _orders[indexOrders];
+    } else if (indexAllOrders >= 0) {
+      currentOrder = _allOrders[indexAllOrders];
+    }
+
+    if (currentOrder != null) {
       final updatedOrder = Order(
         id: currentOrder.id,
         userId: currentOrder.userId,
@@ -139,7 +159,8 @@ class OrderProvider extends ChangeNotifier {
         isGift: currentOrder.isGift,
         insuranceFee: currentOrder.insuranceFee,
       );
-      _orders[index] = updatedOrder;
+      if (indexOrders >= 0) _orders[indexOrders] = updatedOrder;
+      if (indexAllOrders >= 0) _allOrders[indexAllOrders] = updatedOrder;
       await orderDbHelper.update(updatedOrder);
       notifyListeners();
     }
@@ -213,7 +234,7 @@ class OrderProvider extends ChangeNotifier {
   }
 
   double get totalRevenue {
-    return _orders
+    return _allOrders
         .where((order) => order.status == OrderStatus.delivered)
         .fold(0.0, (sum, order) => sum + order.finalAmount);
   }
@@ -231,8 +252,10 @@ class OrderProvider extends ChangeNotifier {
 
   int get totalOrdersCount => _orders.length;
 
+  int get totalOrdersAdmin => _allOrders.length;
+
   int get completedOrdersCount =>
-      _orders.where((order) => order.status == OrderStatus.delivered).length;
+      _allOrders.where((order) => order.status == OrderStatus.delivered).length;
 
   int get pendingOrdersCount =>
       _orders.where((order) => order.status == OrderStatus.pending).length;

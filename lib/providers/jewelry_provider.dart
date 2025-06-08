@@ -89,7 +89,8 @@ class JewelryProvider extends ChangeNotifier {
   }
 
   void _filterJewelries() {
-    _filteredJewelries = _jewelries.where((jewelry) {
+    _filteredJewelries =
+        _jewelries.where((jewelry) => !jewelry.isDeleted).where((jewelry) {
       final matchesSearch = _searchQuery.isEmpty ||
           jewelry.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
           jewelry.description
