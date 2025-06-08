@@ -18,6 +18,8 @@ class JewelryProvider extends ChangeNotifier {
 
   List<Jewelry> get jewelries =>
       _filteredJewelries.isEmpty ? _jewelries : _filteredJewelries;
+  List<Jewelry> get jewelrieAdmin =>
+      _jewelries.where((jewelry) => !jewelry.isDeleted).toList();
   String get searchQuery => _searchQuery;
   String get selectedCategory => _selectedCategory;
   String get selectedMaterial => _selectedMaterial;
@@ -70,6 +72,10 @@ class JewelryProvider extends ChangeNotifier {
   void filterByMaterial(String material) {
     _selectedMaterial = material;
     _filterJewelries();
+  }
+
+  int get totalJewelrieAdmin {
+    return _jewelries.where((jewelry) => !jewelry.isDeleted).length;
   }
 
   void filterByPriceRange(double min, double max) {

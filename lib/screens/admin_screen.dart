@@ -92,7 +92,7 @@ class StatisticsTab extends StatelessWidget {
                   Expanded(
                     child: _buildStatCard(
                       'Tổng sản phẩm',
-                      jewelryProvider.jewelries.length.toString(),
+                      jewelryProvider.totalJewelrieAdmin.toString(),
                       Icons.diamond,
                       Colors.blue,
                     ),
@@ -280,7 +280,7 @@ class JewelryManagementTab extends StatelessWidget {
     return Scaffold(
       body: Consumer<JewelryProvider>(
         builder: (context, jewelryProvider, child) {
-          final jewelries = jewelryProvider.jewelries;
+          final jewelries = jewelryProvider.jewelrieAdmin;
 
           if (jewelries.isEmpty) {
             return const Center(

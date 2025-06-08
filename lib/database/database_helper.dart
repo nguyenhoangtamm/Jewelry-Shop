@@ -29,11 +29,9 @@ class DatabaseHelper {
     } catch (_) {}
 
     // Chỉ copy database từ assets nếu chưa tồn tại
-    if (!await File(path).exists()) {
-      ByteData data = await rootBundle.load("assets/db/app_database.db");
-      List<int> bytes = data.buffer.asUint8List();
-      await File(path).writeAsBytes(bytes, flush: true);
-    }
+    ByteData data = await rootBundle.load("assets/db/app_database.db");
+    List<int> bytes = data.buffer.asUint8List();
+    await File(path).writeAsBytes(bytes, flush: true);
 
     return await openDatabase(path);
   }
