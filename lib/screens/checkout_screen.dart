@@ -660,7 +660,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       // Simulate API call delay
       await Future.delayed(const Duration(seconds: 2));
 
-      orderProvider.placeOrder(
+      await orderProvider.placeOrder(
         items: cartProvider.items,
         customerName: _nameController.text,
         customerPhone: _phoneController.text,

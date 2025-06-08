@@ -1,15 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:jewelry_management_app/database/database_helper.dart';
+import 'package:jewelry_management_app/models/jewelry.dart';
+import 'package:jewelry_management_app/models/order_details.dart';
+import 'package:jewelry_management_app/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 import '../models/cart_item.dart';
 import '../models/order.dart';
 
 class OrderProvider extends ChangeNotifier {
-  List<Order> _orders = [];
-
+  final List<Order> _orders = [];
+  String? userId = '';
   List<Order> get orders => _orders;
-
+  final jewelryDbHelper =
+      GenericDbHelper<Jewelry>('jewelries', Jewelry.fromJson);
   List<Order> get recentOrders => _orders.take(5).toList();
+  final orderDbHelper = GenericDbHelper<Order>('orders', Order.fromJson);
+  final orderDetailsDbHelper =
+      GenericDbHelper<OrderDetail>('order_details', OrderDetail.fromJson);
+  Future<void> initializeOrders(BuildContext context) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    userId = authProvider.currentUser?.id;
 
-  void placeOrder({
+    if (userId == null) {
+      _orders.clear();
+      notifyListeners();
+      return;
+    }
+
+    final ordersFromDb = await orderDbHelper.getAll();
+
+    final filteredOrders =
+        ordersFromDb.where((order) => order.userId == userId).toList();
+    final orderDetails = await orderDetailsDbHelper.getAll();
+    for (var order in filteredOrders) {
+      final details =
+          orderDetails.where((detail) => detail.orderId == order.id).toList();
+
+      // Lấy jewelry bất đồng bộ
+      order.items = await Future.wait(details.map((detail) async {
+        final jewelry = await jewelryDbHelper.getById(detail.jewelryId);
+        return CartItem(
+          id: detail.id,
+          jewelry: jewelry!,
+          quantity: detail.quantity,
+          giftWrapOption: detail.giftWrapOption,
+          engraving: detail.engraving,
+          personalizedMessage: detail.personalizedMessage,
+        );
+      }));
+    }
+    _orders.clear();
+    _orders.addAll(filteredOrders);
+    notifyListeners();
+  }
+
+  Future<void> placeOrder({
     required List<CartItem> items,
     required String customerName,
     required String customerPhone,
@@ -21,15 +66,17 @@ class OrderProvider extends ChangeNotifier {
     PaymentMethod paymentMethod = PaymentMethod.cash,
     bool isGift = false,
     double insuranceFee = 0,
-  }) {
+  }) async {
     final totalValue = items.fold(0.0, (sum, item) => sum + item.totalPrice);
     final calculatedInsuranceFee =
         insuranceFee > 0 ? insuranceFee : (totalValue * 0.005);
 
     final order = Order(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
+      userId: userId ?? '',
       items: List.from(items),
       totalAmount: totalValue,
+      status: OrderStatus.pending,
       orderTime: DateTime.now(),
       customerName: customerName,
       customerPhone: customerPhone,
@@ -39,12 +86,27 @@ class OrderProvider extends ChangeNotifier {
       deliveryFee: deliveryFee,
       discount: discount,
       paymentMethod: paymentMethod,
+      trackingNumber: null,
+      estimatedDeliveryDate: _calculateEstimatedDeliveryDate(),
       isGift: isGift,
       insuranceFee: calculatedInsuranceFee,
-      estimatedDeliveryDate: _calculateEstimatedDeliveryDate(),
     );
 
     _orders.insert(0, order);
+    await orderDbHelper.insert(order);
+    // Insert từng orderDetail vào orderDetailsDbHelper
+    for (final item in items) {
+      final detail = OrderDetail(
+        id: DateTime.now().microsecondsSinceEpoch.toString() + item.jewelry.id,
+        orderId: order.id,
+        jewelryId: item.jewelry.id,
+        quantity: item.quantity,
+        giftWrapOption: item.giftWrapOption,
+        engraving: item.engraving,
+        personalizedMessage: item.personalizedMessage,
+      );
+      await orderDetailsDbHelper.insert(detail);
+    }
     notifyListeners();
   }
 
@@ -53,12 +115,13 @@ class OrderProvider extends ChangeNotifier {
     return now.add(const Duration(days: 5));
   }
 
-  void updateOrderStatus(String orderId, OrderStatus newStatus) {
+  Future<void> updateOrderStatus(String orderId, OrderStatus newStatus) async {
     final index = _orders.indexWhere((order) => order.id == orderId);
     if (index >= 0) {
       final currentOrder = _orders[index];
       final updatedOrder = Order(
         id: currentOrder.id,
+        userId: currentOrder.userId,
         items: currentOrder.items,
         totalAmount: currentOrder.totalAmount,
         status: newStatus,
@@ -77,16 +140,19 @@ class OrderProvider extends ChangeNotifier {
         insuranceFee: currentOrder.insuranceFee,
       );
       _orders[index] = updatedOrder;
+      await orderDbHelper.update(updatedOrder);
       notifyListeners();
     }
   }
 
-  void updateTrackingNumber(String orderId, String trackingNumber) {
+  Future<void> updateTrackingNumber(
+      String orderId, String trackingNumber) async {
     final index = _orders.indexWhere((order) => order.id == orderId);
     if (index >= 0) {
       final currentOrder = _orders[index];
       final updatedOrder = Order(
         id: currentOrder.id,
+        userId: currentOrder.userId,
         items: currentOrder.items,
         totalAmount: currentOrder.totalAmount,
         status: currentOrder.status,
@@ -105,16 +171,17 @@ class OrderProvider extends ChangeNotifier {
         insuranceFee: currentOrder.insuranceFee,
       );
       _orders[index] = updatedOrder;
+      await orderDbHelper.update(updatedOrder);
       notifyListeners();
     }
   }
 
-  void cancelOrder(String orderId) {
-    updateOrderStatus(orderId, OrderStatus.cancelled);
+  Future<void> cancelOrder(String orderId) async {
+    await updateOrderStatus(orderId, OrderStatus.cancelled);
   }
 
-  void returnOrder(String orderId) {
-    updateOrderStatus(orderId, OrderStatus.returned);
+  Future<void> returnOrder(String orderId) async {
+    await updateOrderStatus(orderId, OrderStatus.returned);
   }
 
   Order? getOrderById(String orderId) {

@@ -1,3 +1,4 @@
+import 'package:jewelry_management_app/models/order_details.dart';
 import 'package:jewelry_management_app/models/user.dart';
 import 'package:jewelry_management_app/models/jewelry.dart';
 import 'package:jewelry_management_app/models/order.dart';
@@ -253,105 +254,101 @@ final jewelries = [
 final orders = [
   Order(
     id: 'DH001',
-    items: [],
-    totalAmount: 150000,
-    status: OrderStatus.pending,
-    orderTime: DateTime.now().subtract(const Duration(days: 2)),
+    userId: '1',
     customerName: 'Nguyễn Văn A',
     customerPhone: '0123456789',
     customerEmail: 'user01@example.com',
     deliveryAddress: '123 Đường Lê Duẫn, Quận 1, Tp.HCM',
     giftMessage: null,
-    deliveryFee: 20000,
-    discount: 0,
+    deliveryFee: 20000.0,
+    discount: 0.0,
+    insuranceFee: 0.0,
+    totalAmount: 150000.0,
+    status: OrderStatus.pending,
     paymentMethod: PaymentMethod.cash,
-    trackingNumber: null,
+    orderTime: DateTime.now().subtract(const Duration(days: 2)),
     estimatedDeliveryDate: DateTime.now().add(const Duration(days: 3)),
     isGift: false,
-    insuranceFee: 0,
+    trackingNumber: null,
+    createdAt: DateTime.now().subtract(const Duration(days: 2)),
+    updatedAt: null,
+    isDeleted: false,
   ),
   Order(
     id: 'DH002',
-    items: [],
-    totalAmount: 300000,
-    status: OrderStatus.delivered,
-    orderTime: DateTime.now().subtract(const Duration(days: 5)),
+    userId: '1',
     customerName: 'Trần Thị B',
     customerPhone: '0987654321',
     customerEmail: 'user02@example.com',
     deliveryAddress: '456 Đường Nguyễn Đình Chiểu, Quận 3, Tp.HCM',
     giftMessage: 'Chúc mừng sinh nhật!',
-    deliveryFee: 20000,
-    discount: 0,
+    deliveryFee: 20000.0,
+    discount: 0.0,
+    insuranceFee: 10000.0,
+    totalAmount: 300000.0,
+    status: OrderStatus.delivered,
     paymentMethod: PaymentMethod.bankTransfer,
-    trackingNumber: 'TRACK12345',
+    orderTime: DateTime.now().subtract(const Duration(days: 5)),
     estimatedDeliveryDate: DateTime.now().subtract(const Duration(days: 1)),
     isGift: true,
-    insuranceFee: 10000,
+    trackingNumber: 'TRACK12345',
+    createdAt: DateTime.now().subtract(const Duration(days: 5)),
+    updatedAt: null,
+    isDeleted: false,
   ),
   Order(
     id: 'DH003',
-    items: [],
-    totalAmount: 500000,
-    status: OrderStatus.processing,
-    orderTime: DateTime.now().subtract(const Duration(days: 1)),
+    userId: '1',
     customerName: 'Lê Văn C',
     customerPhone: '0912345678',
     customerEmail: 'user03@example.com',
-    deliveryAddress:
-        'Đường Phạm Hữu Lầu, Phường 6, Tp.Cao Lãnh, Tỉnh Đồng Tháp',
+    deliveryAddress: 'Đường Phạm Hữu Lầu, Phường 6, Tp.Cao Lãnh, Tỉnh Đồng Tháp',
     giftMessage: null,
-    deliveryFee: 20000,
-    discount: 0,
+    deliveryFee: 20000.0,
+    discount: 0.0,
+    insuranceFee: 5000.0,
+    totalAmount: 500000.0,
+    status: OrderStatus.processing,
     paymentMethod: PaymentMethod.creditCard,
-    trackingNumber: 'TRACK67890',
+    orderTime: DateTime.now().subtract(const Duration(days: 1)),
     estimatedDeliveryDate: DateTime.now().add(const Duration(days: 2)),
     isGift: false,
-    insuranceFee: 5000,
+    trackingNumber: 'TRACK67890',
+    createdAt: DateTime.now().subtract(const Duration(days: 1)),
+    updatedAt: null,
+    isDeleted: false,
   ),
 ];
 
 // Dữ liệu mẫu cho order_details
 final orderDetails = [
   // Đơn hàng DH001
-  {
-    'id': 'od001',
-    'orderId': 'DH001',
-    'jewelryId': '1',
-    'quantity': 1,
-    'price': 130000,
-    'addedAt':
-        DateTime.now().subtract(const Duration(days: 3)).toIso8601String(),
-    'createdAt':
-        DateTime.now().subtract(const Duration(days: 3)).toIso8601String(),
-    'isDeleted': 0,
-  },
+  OrderDetail(
+    id: 'od001',
+    orderId: 'DH001',
+    jewelryId: '1',
+    quantity: 1,
+    createdAt: DateTime.now().subtract(const Duration(days: 3)),
+    isDeleted: false,
+  ),
   // Đơn hàng DH002
-  {
-    'id': 'od002',
-    'orderId': 'DH002',
-    'jewelryId': '2',
-    'quantity': 2,
-    'price': 140000,
-    'addedAt':
-        DateTime.now().subtract(const Duration(days: 6)).toIso8601String(),
-    'createdAt':
-        DateTime.now().subtract(const Duration(days: 6)).toIso8601String(),
-    'isDeleted': 0,
-  },
+  OrderDetail(
+    id: 'od002',
+    orderId: 'DH002',
+    jewelryId: '2',
+    quantity: 2,
+    createdAt: DateTime.now().subtract(const Duration(days: 6)),
+    isDeleted: false,
+  ),
   // Đơn hàng DH003
-  {
-    'id': 'od003',
-    'orderId': 'DH003',
-    'jewelryId': '3',
-    'quantity': 1,
-    'price': 480000,
-    'addedAt':
-        DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
-    'createdAt':
-        DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
-    'isDeleted': 0,
-  },
+  OrderDetail(
+    id: 'od003',
+    orderId: 'DH003',
+    jewelryId: '3',
+    quantity: 1,
+    createdAt: DateTime.now().subtract(const Duration(days: 1)),
+    isDeleted: false,
+  ),
 ];
 // Dữ liệu mẫu cho favorite_jewelries
 final favoriteJewelries = [

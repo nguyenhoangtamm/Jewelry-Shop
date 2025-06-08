@@ -45,7 +45,8 @@ class AuthProvider extends ChangeNotifier {
       final userJson = json.encode(user.toJson());
       await prefs.setString('current_user', userJson);
     } catch (e) {
-      print('Error saving current user: $e');
+      _currentUser = null;
+      notifyListeners();
     }
   }
 
@@ -123,7 +124,7 @@ class AuthProvider extends ChangeNotifier {
   }) async {
     _setLoading(true);
     _clearError();
-    
+
     try {
       // Simulate API delay
       await Future.delayed(const Duration(seconds: 1));

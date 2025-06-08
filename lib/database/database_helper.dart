@@ -1,10 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
-import 'package:jewelry_management_app/models/cart_item.dart';
-import 'package:jewelry_management_app/models/jewelry.dart';
-import 'package:jewelry_management_app/models/order.dart';
-import 'package:jewelry_management_app/models/user.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -27,20 +23,17 @@ class DatabaseHelper {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, "app_database.db");
 
-    // Đảm bảo đóng database trước khi xóa
+    // Đảm bảo đóng database trước khi thao tác
     try {
       await _database?.close();
     } catch (_) {}
 
-    // XÓA database cũ nếu tồn tại
-    if (await File(path).exists()) {
-      await File(path).delete();
+    // Chỉ copy database từ assets nếu chưa tồn tại
+    if (!await File(path).exists()) {
+      ByteData data = await rootBundle.load("assets/db/app_database.db");
+      List<int> bytes = data.buffer.asUint8List();
+      await File(path).writeAsBytes(bytes, flush: true);
     }
-
-    // Copy lại file database từ assets
-    ByteData data = await rootBundle.load("assets/db/app_database.db");
-    List<int> bytes = data.buffer.asUint8List();
-    await File(path).writeAsBytes(bytes, flush: true);
 
     return await openDatabase(path);
   }
@@ -88,44 +81,44 @@ class DatabaseHelper {
   updatedAt TEXT,
   isDeleted INTEGER DEFAULT 0
 );
-    CREATE TABLE orders(
-      id TEXT PRIMARY KEY,
-      userId TEXT,
-      subtotal REAL,
-      shippingFee REAL,
-      discount REAL,
-      total REAL,
-      status TEXT,
-      shippingAddress TEXT,
-      notes TEXT,
-      createdAt TEXT,
-      updatedAt TEXT,
-      trackingNumber TEXT,
-      isDeleted INTEGER,
-      FOREIGN KEY(userId) REFERENCES users(id)
-      );
-      CREATE TABLE cart_items (
-        id TEXT PRIMARY KEY,
-        jewelryId TEXT NOT NULL, 
-        quantity INTEGER NOT NULL,
-        addedAt TEXT NOT NULL,
-        createdAt TEXT,
-        updatedAt TEXT,
-        isDeleted INTEGER NOT NULL DEFAULT 0
-      );
+    CREATE TABLE orders (
+  id TEXT PRIMARY KEY,
+  userId TEXT NOT NULL,
+  customerName TEXT NOT NULL,
+  customerPhone TEXT NOT NULL,
+  customerEmail TEXT NOT NULL,
+  deliveryAddress TEXT NOT NULL,
+  giftMessage TEXT,
+  subtotal REAL,
+  deliveryFee REAL,
+  discount REAL,
+  insuranceFee REAL,
+  totalAmount REAL,
+  status INTEGER, -- lưu index của enum OrderStatus
+  paymentMethod INTEGER, -- lưu index của enum PaymentMethod
+  orderTime TEXT, -- ISO 8601 string
+  estimatedDeliveryDate TEXT,
+  isGift INTEGER DEFAULT 0, -- 0: false, 1: true
+  trackingNumber TEXT,
+  createdAt TEXT,
+  updatedAt TEXT,
+  isDeleted INTEGER DEFAULT 0,
+  FOREIGN KEY(userId) REFERENCES users(id)
+);
        CREATE TABLE order_details (
-    id TEXT PRIMARY KEY,
-    orderId TEXT NOT NULL,
-    jewelryId TEXT NOT NULL,
-    quantity INTEGER NOT NULL,
-    price REAL NOT NULL,
-    addedAt TEXT,
-    createdAt TEXT,
-    updatedAt TEXT,
-    isDeleted INTEGER NOT NULL DEFAULT 0,
-    FOREIGN KEY(orderId) REFERENCES orders(id),
-    FOREIGN KEY(jewelryId) REFERENCES jewelries(id)
-  );
+  id TEXT PRIMARY KEY,
+  orderId TEXT NOT NULL,
+  jewelryId TEXT NOT NULL,
+  quantity INTEGER DEFAULT 1,
+  giftWrapOption TEXT,
+  engraving TEXT,
+  personalizedMessage TEXT,
+  createdAt TEXT,
+  updatedAt TEXT,
+  isDeleted INTEGER DEFAULT 0,
+  FOREIGN KEY(orderId) REFERENCES orders(id),
+  FOREIGN KEY(jewelryId) REFERENCES jewelries(id)
+);
 CREATE TABLE favorite_jewelries (
   id TEXT PRIMARY KEY,
   jewelryId TEXT NOT NULL,
@@ -159,7 +152,7 @@ CREATE TABLE favorite_jewelries (
 
 // Chèn dữ liệu vào bảng order_details
     for (final detail in orderDetails) {
-      await db.insert('order_details', detail);
+      await db.insert('order_details', detail.toJson());
     }
 // favorite_jewelries
     for (final favorite in favoriteJewelries) {

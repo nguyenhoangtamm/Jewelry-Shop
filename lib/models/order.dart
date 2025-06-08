@@ -21,6 +21,7 @@ enum PaymentMethod {
 }
 
 class Order extends BaseModel {
+  String userId;
   List<CartItem> items = [];
   double totalAmount;
   OrderStatus status;
@@ -40,6 +41,7 @@ class Order extends BaseModel {
 
   Order({
     required super.id,
+    required this.userId,
     this.items = const [],
     required this.totalAmount,
     this.status = OrderStatus.pending,
@@ -103,7 +105,7 @@ class Order extends BaseModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'items': items.map((item) => item.toJson()).toList(),
+      'userId': userId,
       'totalAmount': totalAmount,
       'status': status.index,
       'orderTime': orderTime.toIso8601String(),
@@ -117,7 +119,7 @@ class Order extends BaseModel {
       'paymentMethod': paymentMethod.index,
       'trackingNumber': trackingNumber,
       'estimatedDeliveryDate': estimatedDeliveryDate?.toIso8601String(),
-      'isGift': isGift?1 : 0, // convert bool to int
+      'isGift': isGift ? 1 : 0, // convert bool to int
       'insuranceFee': insuranceFee,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
@@ -125,12 +127,10 @@ class Order extends BaseModel {
     };
   }
 
-  factory Order.fromJson(Map<String, dynamic> json) {
+  static Order fromJson(Map<String, dynamic> json) {
     return Order(
       id: json['id'],
-      items: (json['items'] as List)
-          .map((item) => CartItem.fromJson(item))
-          .toList(),
+      userId: json['userId'],
       totalAmount: json['totalAmount'].toDouble(),
       status: OrderStatus.values[json['status']],
       orderTime: DateTime.parse(json['orderTime']),
@@ -146,13 +146,59 @@ class Order extends BaseModel {
       estimatedDeliveryDate: json['estimatedDeliveryDate'] != null
           ? DateTime.parse(json['estimatedDeliveryDate'])
           : null,
-      isGift: json['isGift'] ?? false,
+      isGift: json['isGift'] == 1,
       insuranceFee: json['insuranceFee']?.toDouble() ?? 0.0,
       createdAt:
           json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
       updatedAt:
           json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
-      isDeleted: json['isDeleted'] ?? false,
+      isDeleted: json['isDeleted'] == 1,
+    );
+  }
+  Order copyWith({
+    String? id,
+    String? userId,
+    double? totalAmount,
+    OrderStatus? status,
+    DateTime? orderTime,
+    String? customerName,
+    String? customerPhone,
+    String? customerEmail,
+    String? deliveryAddress,
+    String? giftMessage,
+    double? deliveryFee,
+    double? discount,
+    PaymentMethod? paymentMethod,
+    String? trackingNumber,
+    DateTime? estimatedDeliveryDate,
+    bool? isGift,
+    double? insuranceFee,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    bool? isDeleted,
+  }) {
+    return Order(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      totalAmount: totalAmount ?? this.totalAmount,
+      status: status ?? this.status,
+      orderTime: orderTime ?? this.orderTime,
+      customerName: customerName ?? this.customerName,
+      customerPhone: customerPhone ?? this.customerPhone,
+      customerEmail: customerEmail ?? this.customerEmail,
+      deliveryAddress: deliveryAddress ?? this.deliveryAddress,
+      giftMessage: giftMessage ?? this.giftMessage,
+      deliveryFee: deliveryFee ?? this.deliveryFee,
+      discount: discount ?? this.discount,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      trackingNumber: trackingNumber ?? this.trackingNumber,
+      estimatedDeliveryDate:
+          estimatedDeliveryDate ?? this.estimatedDeliveryDate,
+      isGift: isGift ?? this.isGift,
+      insuranceFee: insuranceFee ?? this.insuranceFee,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isDeleted: isDeleted ?? this.isDeleted,
     );
   }
 }
