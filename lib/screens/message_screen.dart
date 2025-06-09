@@ -37,39 +37,93 @@ class MessageScreen extends StatelessWidget {
       {
         'avatar':
             'https://tse2.mm.bing.net/th?id=OIP.RR8HM_MwUsXs2mczEJaZUwHaHa&pid=Api&P=0&h=220',
-        'shopName': 'thiendimar',
-        'lastMessage': 'Bạn cho shop số đo vòng 2 và 3...',
+        'shopName': 'Thiên Di',
+
+        'lastMessage': 'Bạn cho shop xin size tay...',
         'date': '29/04',
         'unread': true,
         'unreadCount': 2,
       },
-      {
-        'avatar':
-            'https://tse2.mm.bing.net/th?id=OIP.zclkNfJMLe2IejNMYcG-WwHaHa&pid=Api&P=0&h=220',
-        'shopName': 'Trang Sức Kim Hòa',
-        'lastMessage': 'Chị ơi mình giao trong hôm nay được không ạ?',
-        'date': '28/04',
-        'unread': false,
-      },
-      {
-        'avatar':
-            'https://tse4.mm.bing.net/th?id=OIP.539_Ea8RUqOg9BfqH84WuAHaHa&pid=Api&P=0&h=220',
-        'shopName': 'Bạc Uy Tín 1989',
-        'lastMessage': 'Cảm ơn bạn đã đánh giá đơn hàng hôm qua nha',
-        'date': '27/04',
-        'isMall': true,
-        'unread': false,
-      },
-      {
-        'avatar':
-            'https://tse1.mm.bing.net/th?id=OIP.sSnwYqridLyvENGSJEXZtAHaHa&pid=Api&P=0&h=220',
-        'shopName': 'Trang Sức Thanh Tâm',
-        'lastMessage': 'Shop còn mẫu nhẫn hôm trước không vậy ạ?',
-        'date': '25/04',
-        'unread': true,
-        'unreadCount': 1,
-      },
+    {
+    'avatar':
+    'https://tse2.mm.bing.net/th?id=OIP.zclkNfJMLe2IejNMYcG-WwHaHa&pid=Api&P=0&h=220',
+    'shopName': 'Trang Sức Kim Hòa',
+    'lastMessage': 'Chị ơi mình giao trong hôm nay được không ạ?',
+    'date': '28/04',
+    'unread': false,
+    },
+    {
+    'avatar':
+    'https://tse4.mm.bing.net/th?id=OIP.539_Ea8RUqOg9BfqH84WuAHaHa&pid=Api&P=0&h=220',
+    'shopName': 'Bạc Uy Tín 1989',
+    'lastMessage': 'Cảm ơn bạn đã đánh giá đơn hàng hôm qua nha',
+    'date': '27/04',
+    'isMall': true,
+    'unread': false,
+    },
+    {
+    'avatar':
+    'https://tse1.mm.bing.net/th?id=OIP.sSnwYqridLyvENGSJEXZtAHaHa&pid=Api&P=0&h=220',
+    'shopName': 'Trang Sức Thanh Tâm',
+    'lastMessage': 'Shop còn mẫu nhẫn hôm trước không vậy ạ?',
+    'date': '25/04',
+    'unread': true,
+    'unreadCount': 1,
+    },
+    {
+    'avatar':
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjvCNr8NEvjd0C7v3UaFaMvm1_5fWNk3g-Eg&s',
+    'shopName': 'Du Hí',
+    'lastMessage': 'Bạn cho shop xin size tay...',
+    'date': '29/04',
+    'unread': true,
+    'unreadCount': 2,
+    },
+    {
+    'avatar':
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQluYfe4FdrCSsj-Y5lHvmMhCSWwRTleJZU8Q&s',
+    'shopName': 'Ngọc Ánh Jewelry',
+    'lastMessage': 'Mình mới cập nhật mẫu mới bạn xem nhé!',
+    'date': '30/04',
+    'unread': true,
+    'unreadCount': 3,
+    },
+    {
+    'avatar':
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQn3vx-r_O-TN6ZGz8dr9XhrjmzEHoLiaUIzg&s',
+    'shopName': 'Kim Cương T&T',
+    'lastMessage': 'Bạn cần đặt theo kích thước riêng không?',
+    'date': '01/05',
+    'unread': false,
+    },
+    {
+    'avatar':
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTejbZkSKzjSvrZW4i9fBNkbWWl7-FkpbtQ9A&s',
+    'shopName': 'Vàng Bạc Lộc Phát',
+    'lastMessage': 'Shop có ưu đãi hôm nay bạn tranh thủ nha!',
+    'date': '02/05',
+    'unread': true,
+    'unreadCount': 1,
+    },
+    {
+    'avatar':
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTARkbs4649FbBgsVL78hCMC9Ax-6QnLYfNrg&s',
+    'shopName': 'Jewelry Store 88',
+    'lastMessage': 'Mình đã ship đơn rồi bạn nhé!',
+    'date': '03/05',
+    'unread': false,
+    },
+    {
+    'avatar':
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSX55wAQz9GQJc4YNbycZ5EGUKnHRzOhR2Dg&s',
+    'shopName': 'PNJ Mini',
+    'lastMessage': 'Bạn có thể cho mình feedback không ạ?',
+    'date': '04/05',
+    'unread': true,
+    'unreadCount': 1,
+    }
     ];
+
 
     return Scaffold(
       appBar: AppBar(
