@@ -5,8 +5,21 @@ import 'package:provider/provider.dart';
 import '../models/order.dart';
 import '../providers/order_provider.dart';
 
-class OrdersScreen extends StatelessWidget {
+class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
+
+  @override
+  State<OrdersScreen> createState() => _OrdersScreenState();
+}
+
+class _OrdersScreenState extends State<OrdersScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Gọi load dữ liệu
+    Future.microtask(() => Provider.of<OrderProvider>(context, listen: false)
+        .initializeOrders(context));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +141,7 @@ class OrderCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Đơn hàng #${order.id.substring(order.id.length - 6)}',
+                  'Đơn hàng #${order.id.length > 6 ? order.id.substring(order.id.length - 6) : order.id}',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -578,7 +591,7 @@ class OrderDetailsBottomSheet extends StatelessWidget {
 
               // Title
               Text(
-                'Chi tiết đơn hàng #${order.id.substring(order.id.length - 6)}',
+                'Đơn hàng #${order.id.length > 6 ? order.id.substring(order.id.length - 6) : order.id}',
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
